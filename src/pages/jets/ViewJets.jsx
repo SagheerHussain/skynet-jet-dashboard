@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = 'http://localhost:5000/api/aircrafts';
+const API_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts';
 const BULK_DELETE_URL = `${API_BASE}/bulkDelete`;
 
 const numberFmt = new Intl.NumberFormat('en-US');

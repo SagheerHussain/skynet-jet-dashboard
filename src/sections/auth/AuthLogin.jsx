@@ -60,9 +60,9 @@ export default function AuthLogin({ isDemo = false }) {
         onSubmit={async (values) => {
           setLoading(true);
           const data = { email: values.email, password: values.password };
-          if (values.email || values.password) {
-            setSnack({ open: true, severity: 'error', msg: 'Credentials required' });
-          }
+          // if (values.email || values.password) {
+          //   setSnack({ open: true, severity: 'error', msg: 'Credentials required' });
+          // }
           const response = await loginAccount(data);
           if (response.success) {
             setSnack({ open: true, severity: 'success', msg: 'Login Successfully' });
