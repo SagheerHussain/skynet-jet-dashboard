@@ -101,7 +101,7 @@ const ViewBrands = () => {
         <img
           src={params.row.logo}
           alt="Brand"
-          style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 6 }}
+          style={{ width: 60, height: 60, objectFit: "contain", borderRadius: 6 }}
         />
       ),
     },

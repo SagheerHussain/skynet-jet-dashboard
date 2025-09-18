@@ -4,6 +4,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
+import FlightTakeoffOutlined from '@mui/icons-material/FlightTakeoffOutlined';
+import GroupOutlined from '@mui/icons-material/GroupOutlined';
+import StarBorderRounded from '@mui/icons-material/StarBorderRounded';
+import ArticleOutlined from '@mui/icons-material/ArticleOutlined';
 
 // project imports
 import MainCard from 'components/MainCard';
@@ -22,10 +26,10 @@ export default function DashboardDefault() {
     const fetchAnalysis = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_APP_API_BASE_URL}/api/analysis/lists`);
-        console.log("Analysis Data: ==========>", response);
+        console.log('Analysis Data: ==========>', response);
         if (response?.data?.success) {
           setAnalysis(response.data);
-          console.log("Analysis Data: ==========>", response.data);
+          console.log('Analysis Data: ==========>', response.data);
         }
       } catch (error) {
         console.error('Error fetching analysis:', error);
@@ -41,16 +45,38 @@ export default function DashboardDefault() {
         <Typography variant="h5">Dashboard</Typography>
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <AnalyticEcommerce title="Total Registered Jets" count={analysis?.data?.aircraft} percentage={59.3} extra="35,000" />
+        <AnalyticEcommerce
+          color="primary"
+          title="Total Registered Jets"
+          count={analysis?.data?.aircraft ?? 0}
+          percentage={59.3}
+          icon={<FlightTakeoffOutlined />}
+        />
       </Grid>
+
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <AnalyticEcommerce title="Total Team Members" count={analysis?.data?.team} percentage={70.5} extra="8,900" />
+        <AnalyticEcommerce
+          color="success"
+          title="Total Team Members"
+          count={analysis?.data?.team ?? 0}
+          percentage={12.4}
+          icon={<GroupOutlined />}
+        />
       </Grid>
+
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <AnalyticEcommerce title="Total Reviews" count={analysis?.data?.review} percentage={27.4} isLoss color="warning" extra="1,943" />
+        <AnalyticEcommerce
+          color="warning"
+          title="Total Reviews"
+          count={analysis?.data?.review ?? 0}
+          percentage={27.4}
+          isLoss
+          icon={<StarBorderRounded />}
+        />
       </Grid>
+
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <AnalyticEcommerce title="Total Blogs" count={analysis?.data?.blog} percentage={27.4} isLoss color="warning" extra="20,395" />
+        <AnalyticEcommerce color="info" title="Working Brands" count={analysis?.data?.brand ?? 0} percentage={5.1} icon={<ArticleOutlined />} />
       </Grid>
       <Grid sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} size={{ md: 8 }} />
       {/* row 2 */}

@@ -23,8 +23,8 @@ import SendIcon from '@mui/icons-material/Send';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAircraftCategories } from '../../api/aircraftCategory.api';
 
-const API_READ_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts'; // GET detail
-const API_WRITE_BASE = `https://skynet-jet-dashboard-server.onrender.com/api/aircrafts`; // PUT update
+const API_READ_BASE = 'http://localhost:5000/api/aircrafts'; // GET detail
+const API_WRITE_BASE = `http://localhost:5000/api/aircrafts`; // PUT update
 
 const STATUS = ['for-sale', 'sold', 'wanted', 'coming-soon', 'sale-pending', 'off-market', 'acquired'];
 const SECTION_KEYS = ['airframe', 'engine', 'propeller', 'avionics', 'equipment', 'interior', 'exterior', 'inspection'];
@@ -46,8 +46,13 @@ const docToFormDefaults = (doc = {}) => ({
   year: doc.year ?? '',
   price: doc.price ?? '',
   status: doc.status ?? 'for-sale',
-  category: typeof doc.category === 'object' && doc.category?._id ? doc.category._id : (doc.category ?? ''),
+  category: (() => {
+    const c = typeof doc.category === 'object' && doc.category?._id ? doc.category._id : doc.category;
+    return c ? String(c) : '';
+  })(),
   location: doc.location ?? '',
+  latitude: doc.latitude ?? '',
+  longitude: doc.longitude ?? '',
   airframe: doc.airframe ?? '',
   engine: doc.engine ?? '',
   propeller: doc.propeller ?? '',
@@ -100,21 +105,9 @@ export default function EditJet() {
     setValue,
     formState: { errors }
   } = useForm({
+    // important: start with sensible defaults; replaced after fetch() with reset(docToFormDefaults(doc))
     defaultValues: {
-      title: '',
-      year: '',
-      price: '',
-      status: 'for-sale',
-      category: '',
-      overview: '',
-      location: '',
-      airframe: '',
-      engine: '',
-      propeller: '',
-      agentName: '',
-      agentEmail: '',
-      videoUrl: '',
-      agentPhone: '',
+      ...docToFormDefaults(),
       sections: defaultSectionState
     }
   });
@@ -154,6 +147,11 @@ export default function EditJet() {
       alive = false;
     };
   }, [id, reset]);
+
+  // ensure a safe default if API ever returns blank status
+  useEffect(() => {
+    setValue('status', (prev) => prev || 'for-sale');
+  }, [setValue]);
 
   // navigate
   const navigate = useNavigate();
@@ -198,6 +196,8 @@ export default function EditJet() {
       fd.append('status', values.status);
       fd.append('category', values.category);
       fd.append('location', values.location);
+      fd.append('latitude', String(values.latitude || ''));
+      fd.append('longitude', String(values.longitude || ''));
       fd.append('overview', values.overview);
       fd.append('videoUrl', values.videoUrl);
       if (values.airframe) fd.append('airframe', String(values.airframe));
@@ -214,8 +214,6 @@ export default function EditJet() {
       if (featuredLocal) {
         fd.append('featuredImage', featuredLocal);
       }
-      // Note: to fully REMOVE featured image without replacement, backend needs a flag like:
-      // fd.append('removeFeaturedImage', 'true')  // only if your backend supports this
 
       const resp = await fetch(`${API_WRITE_BASE}/update/${id}`, {
         method: 'PUT',
@@ -268,32 +266,58 @@ export default function EditJet() {
                 helperText={errors.title ? 'Required' : ''}
               />
             </Grid>
+
             <Grid item xs={12} md={4}>
-              <TextField select label="Status" fullWidth defaultValue="for-sale" {...tf} {...register('status')}>
-                {STATUS.map((s) => (
-                  <MenuItem key={s} value={s}>
-                    {s}
-                  </MenuItem>
-                ))}
-              </TextField>
+              {/* STATUS (controlled) */}
+              <Controller
+                name="status"
+                control={control}
+                defaultValue="for-sale"
+                render={({ field }) => (
+                  <TextField select label="Status" fullWidth {...tf} {...field}>
+                    {STATUS.map((s) => (
+                      <MenuItem key={s} value={s}>
+                        {s}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
             </Grid>
+
             <Grid item xs={12} md={3}>
               <TextField label="Year" type="number" fullWidth {...tf} {...register('year')} />
             </Grid>
             <Grid item xs={12} md={3}>
               <TextField label="Price" type="number" fullWidth required {...tf} {...register('price', { required: true })} />
             </Grid>
+
             <Grid item xs={12} md={4}>
-              <TextField select label="Categories" fullWidth {...register('category')}>
-                {categories?.map((s) => (
-                  <MenuItem key={s?._id} value={s?._id}>
-                    {s?.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+              {/* CATEGORY (controlled) */}
+              <Controller
+                name="category"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField select label="Categories" fullWidth {...tf} {...field}>
+                    {categories?.map((s) => (
+                      <MenuItem key={s?._id} value={String(s?._id)}>
+                        {s?.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
             </Grid>
+
             <Grid item xs={12} md={3}>
               <TextField label="Location" fullWidth required {...tf} {...register('location', { required: true })} />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextField label="Latitude" fullWidth {...tf} {...register('latitude')} />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextField label="Longitude" fullWidth {...tf} {...register('longitude')} />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField label="Airframe" type="number" fullWidth {...tf} {...register('airframe')} />
@@ -383,15 +407,9 @@ export default function EditJet() {
             <div className="flex items-center gap-3">
               <Button variant="contained" component="label" startIcon={<UploadIcon />}>
                 {featuredLocal ? 'Change Featured' : 'Select Featured'}
-                <input
-                  ref={featuredInputRef}
-                  hidden
-                  accept="image/*"
-                  type="file"
-                  onChange={onFeaturedChange}
-                />
+                <input ref={featuredInputRef} hidden accept="image/*" type="file" onChange={onFeaturedChange} />
               </Button>
-              <Chip label={featuredLocal ? '1 new selected' : (featuredExisting ? 'Using existing' : 'None')} />
+              <Chip label={featuredLocal ? '1 new selected' : featuredExisting ? 'Using existing' : 'None'} />
               {featuredLocal && (
                 <Button size="small" variant="text" color="error" onClick={clearFeaturedLocal} startIcon={<DeleteIcon />}>
                   Remove New
@@ -404,11 +422,7 @@ export default function EditJet() {
               {featuredLocal ? (
                 <Grid item xs={12} sm={6} md={4} lg={3}>
                   <Paper className="relative border rounded-xl overflow-hidden">
-                    <img
-                      src={URL.createObjectURL(featuredLocal)}
-                      alt={featuredLocal.name}
-                      style={{ width: '100%', height: 'auto', display: 'block' }}
-                    />
+                    <img src={URL.createObjectURL(featuredLocal)} alt={featuredLocal.name} style={{ width: '100%', height: 'auto', display: 'block' }} />
                     <Typography variant="caption" className="block p-2 truncate">
                       {featuredLocal.name}
                     </Typography>

@@ -143,6 +143,8 @@ export default function AddJet() {
       fd.append('status', values.status);
       fd.append('category', values.category);
       fd.append('location', values.location);
+      fd.append('latitude', String(values.latitude || ''));
+      fd.append('longitude', String(values.longitude || ''));
       if (values.airframe) fd.append('airframe', String(values.airframe));
       if (values.engine) fd.append('engine', String(values.engine));
       if (values.propeller) fd.append('propeller', String(values.propeller));
@@ -158,7 +160,7 @@ export default function AddJet() {
         fd.append('featuredImage', featuredImage);
       }
 
-      const resp = await fetch('https://skynet-jet-dashboard-server.onrender.com/api/aircrafts', {
+      const resp = await fetch('http://localhost:5000/api/aircrafts', {
         method: 'POST',
         headers: { Accept: 'application/json' },
         body: fd
@@ -214,10 +216,10 @@ export default function AddJet() {
               </TextField>
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextField label="Year" type="number" fullWidth {...register('year')} />
+              <TextField label="Year" fullWidth {...register('year')} />
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextField label="Price" type="number" fullWidth required {...register('price', { required: true })} />
+              <TextField label="Price" fullWidth required {...register('price', { required: true })} />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField select label="Categories" fullWidth {...register('category')}>
@@ -230,6 +232,12 @@ export default function AddJet() {
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField label="Location" fullWidth required {...register('location', { required: true })} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField label="Latitude" fullWidth required {...register('latitude', { required: true })} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField label="Longitude"  fullWidth required {...register('longitude', { required: true })} />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField label="Airframe" type="number" fullWidth {...register('airframe')} />
