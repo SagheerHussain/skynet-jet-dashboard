@@ -18,7 +18,21 @@ const blogs = {
             type: 'item',
             url: '/blogs',
             icon: icons.EditNoteIcon
-        }
+        },
+        {
+            id: 'blogs-categories',
+            title: 'Blogs Categories',
+            type: 'item',
+            url: '/blogs-categories',
+            icon: icons.EditNoteIcon
+        },
+        {
+            id: 'blogs-authors',
+            title: 'Blogs Authors',
+            type: 'item',
+            url: '/blogs-authors',
+            icon: icons.EditNoteIcon
+        },
     ]
 };
 

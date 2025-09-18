@@ -54,7 +54,7 @@ export default function DashboardDefault() {
       </Grid>
       <Grid sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} size={{ md: 8 }} />
       {/* row 2 */}
-      <Grid size={{ xs: 12, md: 7, lg: 8 }}>
+      {/* <Grid size={{ xs: 12, md: 7, lg: 8 }}>
         <UniqueVisitorCard />
       </Grid>
       <Grid size={{ xs: 12, md: 5, lg: 4 }}>
@@ -75,7 +75,7 @@ export default function DashboardDefault() {
           </Box>
           <MonthlyBarChart />
         </MainCard>
-      </Grid>
+      </Grid> */}
       {/* row 3 */}
       <Grid size={{ xs: 12 }}>
         <Grid container alignItems="center" justifyContent="space-between">

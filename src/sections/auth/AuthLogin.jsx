@@ -71,7 +71,10 @@ export default function AuthLogin({ isDemo = false }) {
             setTimeout(() => {
               navigate("/");
             }, 1000);
-          } else setSnack({ open: true, severity: 'error', msg: 'Email or Password is incorrrect' });
+          } else {
+            setSnack({ open: true, severity: 'error', msg: 'Email or Password is incorrrect' });
+            setLoading(false);
+          };
         }}
       >
         {({ errors, handleBlur, handleChange, touched, values, handleSubmit }) => (
@@ -134,13 +137,13 @@ export default function AuthLogin({ isDemo = false }) {
                 )}
               </Grid>
 
-              <Grid sx={{ mt: -1 }} size={12}>
+              {/* <Grid sx={{ mt: -1 }} size={12}>
                 <Stack direction="row" sx={{ gap: 2, alignItems: 'baseline', justifyContent: 'end' }}>
                   <Link variant="h6" component={RouterLink} to="#" color="text.primary">
                     Forgot Password?
                   </Link>
                 </Stack>
-              </Grid>
+              </Grid> */}
 
               <Grid size={12}>
                 <Button

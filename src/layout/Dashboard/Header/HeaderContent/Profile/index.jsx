@@ -114,22 +114,23 @@ export default function Profile() {
             <Paper sx={(theme) => ({ boxShadow: theme.customShadows.z1, width: 290, minWidth: 240, maxWidth: { xs: 250, md: 290 } })}>
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard elevation={0} border={false} content={false}>
-                  <CardContent sx={{ px: 2.5, pt: 3 }}>
+                  <CardContent sx={{ px: 1, pt: 3 }}>
                     <Grid container justifyContent="space-between" alignItems="center">
-                      <Grid>
+                      {/* <Grid>
                         <Stack direction="row" sx={{ gap: 1.25, alignItems: 'center' }}>
                           <img src={masonAmeliaIcon} style={{ width: "30px", height: "20px" }} alt="" />
                           <Stack>
                             <Typography variant="h6">Mason Amelia</Typography>
                           </Stack>
                         </Stack>
-                      </Grid>
-                      <Grid>
+                      </Grid> */}
+                      <Grid container sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                         <Tooltip title="Logout" onClick={() => { localStorage.clear(); navigate("/login") }}>
-                          <IconButton size="large" sx={{ color: 'text.primary' }}>
+                          <IconButton size="large">
                             <LogoutOutlined />
                           </IconButton>
                         </Tooltip>
+                        <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>Logout</Typography>
                       </Grid>
                     </Grid>
                   </CardContent>
