@@ -1,0 +1,6 @@
+{
+    // "name": "Mason Amelia",
+    "username": "mason-amelia",
+    // "email": "info@masonamelia.com",
+    "password": "admin123"
+}
