@@ -85,16 +85,16 @@ export default function MobileSection() {
       >
         {({ TransitionProps }) => (
           <Transitions type="fade" in={open} {...TransitionProps}>
-            <Paper sx={(theme) => ({ boxShadow: theme.customShadows.z1 })}>
+       
               <ClickAwayListener onClickAway={handleClose}>
-                <AppBar color="inherit">
-                  <Toolbar>
-                    <Search />
+             
+                  <Toolbar sx={{background: "#fff"}}>
+                    {/* <Search /> */}
                     <Profile />
                   </Toolbar>
-                </AppBar>
+              
               </ClickAwayListener>
-            </Paper>
+          
           </Transitions>
         )}
       </Popper>

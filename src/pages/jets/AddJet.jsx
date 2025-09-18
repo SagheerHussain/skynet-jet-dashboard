@@ -160,7 +160,7 @@ export default function AddJet() {
         fd.append('featuredImage', featuredImage);
       }
 
-      const resp = await fetch('http://localhost:5000/api/aircrafts', {
+      const resp = await fetch('https://skynet-jet-dashboard-server.onrender.com/api/aircrafts', {
         method: 'POST',
         headers: { Accept: 'application/json' },
         body: fd
