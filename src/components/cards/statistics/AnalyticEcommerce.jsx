@@ -54,7 +54,7 @@ export default function AnalyticEcommerce({
               height: 220,
               borderRadius: '50%',
               background: `radial-gradient(${alpha(main, 0.28)}, transparent 40%)`,
-              filter: 'blur(8px)'
+              filter: 'blur(12px)'
             }
           };
         }}
@@ -73,9 +73,11 @@ export default function AnalyticEcommerce({
               sx={(theme) => ({
                 width: 36,
                 height: 36,
-                bgcolor: alpha((theme.palette[color] || theme.palette.primary).main, 0.12),
-                color: (theme.palette[color] || theme.palette.primary).main,
-                boxShadow: `0 2px 10px ${alpha((theme.palette[color] || theme.palette.primary).main, 0.24)}`
+                bgcolor: alpha((theme.palette[color]).main, 0.12),
+                color: (theme.palette[color]).main,
+                border: `1px solid ${alpha((theme.palette[color]).main, 0.24)}`,
+                borderRadius: '50%',
+                // boxShadow: `0 2px 10px ${alpha((theme.palette[color] || theme.palette.primary).main, 0.24)}`
               })}
             >
               {icon}
