@@ -12,10 +12,10 @@ export default function DrawerContent() {
 
   return (
     <>
-      <SimpleBar sx={{ '& .simplebar-content': { minHeight: "90vh", overflow: "hidden", display: 'flex', marginTop: 10, flexDirection: 'column' } }}>
+      <div className='2xl:py-14 2xl:overflow-hidden py-10'>
         <Navigation />
         {drawerOpen}
-      </SimpleBar>
+      </div>
     </>
   );
 }

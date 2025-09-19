@@ -35,7 +35,6 @@ export default function NavGroup({ item }) {
 
   return (
     <List
-
       subheader={
         item.title &&
         drawerOpen && (

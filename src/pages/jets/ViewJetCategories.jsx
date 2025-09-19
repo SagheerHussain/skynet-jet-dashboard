@@ -131,7 +131,7 @@ const ViewJetCategories = () => {
     <>
       <div className="flex items-center justify-between px-4 py-3 border-b">
         <div className="flex items-center gap-3">
-          <Typography variant="h6" className="font-bold">Aircraft Categories</Typography>
+          <Typography variant="h6" className="font-bold">Categories</Typography>
           <span className="text-xs text-zinc-500">{numberFmt.format(rows.length)} items</span>
         </div>
         <div className="flex items-center gap-2">
@@ -146,7 +146,7 @@ const ViewJetCategories = () => {
             </Button>
           )}
           <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate("/jets-categories/add")}>
-            Add Aircraft Category
+            Add Category
           </Button>
         </div>
       </div>

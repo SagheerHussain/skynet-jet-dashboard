@@ -48,12 +48,12 @@ export default function AnalyticEcommerce({
             '&:before': {
               content: '""',
               position: 'absolute',
-              right: -60,
-              top: -60,
+              right: -90,
+              top: -70,
               width: 220,
               height: 220,
               borderRadius: '50%',
-              background: `radial-gradient(${alpha(main, 0.28)}, transparent 60%)`,
+              background: `radial-gradient(${alpha(main, 0.28)}, transparent 40%)`,
               filter: 'blur(8px)'
             }
           };
@@ -103,22 +103,6 @@ export default function AnalyticEcommerce({
           >
             {formatCount(count)}
           </Typography>
-        )}
-
-        {/* trend chip (optional) */}
-        {typeof percentage === 'number' && (
-          <Chip
-            size="small"
-            icon={isLoss ? <FallOutlined style={trendIconSX} /> : <RiseOutlined style={trendIconSX} />}
-            label={`${isLoss ? '-' : '+'}${percentage}%`}
-            sx={(theme) => ({
-              alignSelf: 'flex-start',
-              borderRadius: '999px',
-              fontWeight: 600,
-              bgcolor: alpha((theme.palette[color] || theme.palette.primary).main, 0.12),
-              color: (theme.palette[color] || theme.palette.primary).main
-            })}
-          />
         )}
 
         {extra && (

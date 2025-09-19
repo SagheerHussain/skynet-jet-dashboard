@@ -37,6 +37,7 @@ export default function MainDrawer({ window }) {
       ) : (
         <Drawer
           container={container}
+          className='border-4 border-green-500'
           variant="temporary"
           open={drawerOpen}
           onClose={() => handlerDrawerOpen(!drawerOpen)}
