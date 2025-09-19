@@ -12,17 +12,24 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Chip
+  Chip,
+  Menu,
+  MenuItem,
+  CircularProgress
 } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import { useNavigate } from 'react-router-dom';
 import { purple } from '@mui/material/colors';
 
 const API_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts';
 const BULK_DELETE_URL = `${API_BASE}/bulkDelete`;
+
+// Status options (slugs)
+const STATUS_OPTIONS = ['for-sale', 'sold', 'wanted', 'coming-soon', 'sale-pending', 'off-market', 'acquired'];
 
 const numberFmt = new Intl.NumberFormat('en-US');
 const moneyFmt = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
@@ -104,6 +111,58 @@ function StatusPill({ value }) {
   );
 }
 
+/* ------------ Per-row Status Menu (inside Actions) ------------ */
+function RowStatusMenu({ rowId, currentStatus, onUpdated }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [saving, setSaving] = React.useState(false);
+  const open = Boolean(anchorEl);
+
+  const handleOpen = (e) => setAnchorEl(e.currentTarget);
+  const handleClose = () => setAnchorEl(null);
+
+  const updateStatus = async (newStatus) => {
+    try {
+      setSaving(true);
+      // send as multipart/form-data so your multer route accepts it
+      const fd = new FormData();
+      fd.append('status', newStatus);
+      const res = await fetch(`${API_BASE}/update/${rowId}`, {
+        method: 'PUT',
+        body: fd
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`Update failed: ${res.status} ${t}`);
+      }
+      onUpdated?.(rowId, newStatus);
+    } finally {
+      setSaving(false);
+      handleClose();
+    }
+  };
+
+  return (
+    <>
+      <Tooltip title="Change status">
+        <span className="flex">
+          <IconButton size="small" onClick={handleOpen} disabled={saving}>
+            {saving ? <CircularProgress size={18} /> : <ChangeCircleIcon fontSize="small" />}
+          </IconButton>
+        </span>
+      </Tooltip>
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        {STATUS_OPTIONS.map((s) => (
+          <MenuItem key={s} selected={s === currentStatus} onClick={() => updateStatus(s)}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <StatusPill value={s} />
+            </div>
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
+}
+
 export default function AircraftTable() {
   const [loading, setLoading] = React.useState(true);
   const [aircrafts, setAircrafts] = React.useState([]);
@@ -130,6 +189,19 @@ export default function AircraftTable() {
   React.useEffect(() => {
     fetchRows();
   }, [fetchRows]);
+
+  // apply local change after successful PUT
+  const handleStatusUpdated = React.useCallback((id, newStatus) => {
+    setAircrafts((prev) =>
+      (prev || []).map((d) => {
+        const docId = d._id || d.id;
+        if (String(docId) === String(id)) {
+          return { ...d, status: newStatus };
+        }
+        return d;
+      })
+    );
+  }, []);
 
   const rows = React.useMemo(() => {
     return (aircrafts || []).map((d) => {
@@ -236,7 +308,7 @@ export default function AircraftTable() {
       {
         field: 'actions',
         headerName: 'Actions',
-        width: 110,
+        width: 150,
         sortable: false,
         filterable: false,
         renderCell: (params) => (
@@ -251,11 +323,14 @@ export default function AircraftTable() {
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </Tooltip>
+
+            {/* NEW: Change Status menu */}
+            <RowStatusMenu rowId={params.row.id} currentStatus={params.row.status} onUpdated={handleStatusUpdated} />
           </Stack>
         )
       }
     ],
-    [navigate]
+    [navigate, handleStatusUpdated]
   );
 
   return (
