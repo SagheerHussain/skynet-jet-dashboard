@@ -12,7 +12,7 @@ export default function DrawerContent() {
 
   return (
     <>
-      <div className='2xl:py-14 2xl:overflow-hidden py-10'>
+      <div className='2xl:py-14 py-10'>
         <Navigation />
         {drawerOpen}
       </div>

@@ -5,3 +5,6 @@
   color: #000 !important;
   font-weight: 600 !important;
 }
+body ::-webkit-scrollbar {
+  width: 3px !important;
+}
