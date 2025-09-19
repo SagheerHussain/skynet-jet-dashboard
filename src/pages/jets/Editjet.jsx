@@ -55,7 +55,9 @@ const docToFormDefaults = (doc = {}) => ({
   longitude: doc.longitude ?? '',
   airframe: doc.airframe ?? '',
   engine: doc.engine ?? '',
+  engineTwo: doc.engineTwo ?? '',
   propeller: doc.propeller ?? '',
+  propellerTwo: doc.propellerTwo ?? '',
   agentName: doc.contactAgent?.name ?? '',
   agentEmail: doc.contactAgent?.email ?? '',
   agentPhone: doc.contactAgent?.phone ?? '',
@@ -202,7 +204,9 @@ export default function EditJet() {
       fd.append('videoUrl', values.videoUrl);
       if (values.airframe) fd.append('airframe', String(values.airframe));
       if (values.engine) fd.append('engine', String(values.engine));
+      if (values.engineTwo) fd.append('engineTwo', String(values.engineTwo));
       if (values.propeller) fd.append('propeller', String(values.propeller));
+      if (values.propellerTwo) fd.append('propellerTwo', String(values.propellerTwo));
       fd.append('contactAgent', JSON.stringify(contactAgent));
       fd.append('description', JSON.stringify(description));
 
@@ -326,7 +330,13 @@ export default function EditJet() {
               <TextField label="Engine" type="number" fullWidth {...tf} {...register('engine')} />
             </Grid>
             <Grid item xs={12} md={4}>
+              <TextField label="Engine Two" type="number" fullWidth {...tf} {...register('engineTwo')} />
+            </Grid>
+            <Grid item xs={12} md={4}>
               <TextField label="Propeller" type="number" fullWidth {...tf} {...register('propeller')} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField label="Propeller Two" type="number" fullWidth {...tf} {...register('propellerTwo')} />
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1" className="mb-3 font-semibold">

@@ -94,7 +94,9 @@ export default function AddJet() {
       location: '',
       airframe: '',
       engine: '',
+      engineTwo: '',
       propeller: '',
+      propellerTwo: '',
       agentName: '',
       agentEmail: '',
       agentPhone: '',
@@ -147,7 +149,9 @@ export default function AddJet() {
       fd.append('longitude', String(values.longitude || ''));
       if (values.airframe) fd.append('airframe', String(values.airframe));
       if (values.engine) fd.append('engine', String(values.engine));
+      if (values.engineTwo) fd.append('engineTwo', String(values.engineTwo));
       if (values.propeller) fd.append('propeller', String(values.propeller));
+      if (values.propellerTwo) fd.append('propellerTwo', String(values.propellerTwo));
       fd.append('contactAgent', JSON.stringify(contactAgent));
       fd.append('description', JSON.stringify(description));
       fd.append('overview', values.overview);
@@ -243,10 +247,16 @@ export default function AddJet() {
               <TextField label="Airframe" type="number" fullWidth {...register('airframe')} />
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextField label="Engine" type="number" fullWidth {...register('engine')} />
+              <TextField label="Engine One" type="number" fullWidth {...register('engine')} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField label="Engine Two" type="number" fullWidth {...register('engineTwo')} />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField label="Propeller" type="number" fullWidth {...register('propeller')} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField label="Propeller Two" type="number" fullWidth {...register('propellerTwo')} />
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1" className="mb-3 font-semibold">
