@@ -173,8 +173,8 @@ export default function OrderTable() {
                 </TableCell>
 
                 <TableCell align="center">{row?.airframe ?? '—'}</TableCell>
-                <TableCell align="center">{row?.engine ?? '—'}</TableCell>
-                <TableCell align="center">{row?.propeller ?? '—'}</TableCell>
+                <TableCell align="center">{row?.engineTwo ? row.engine + ' / ' + row.engineTwo : row.engine}</TableCell>
+                <TableCell align="center">{row?.propellerTwo ? row.propeller + ' / ' + row.propellerTwo : row.propeller}</TableCell>
                 <TableCell align="center">{row?.category?.name ?? '—'}</TableCell>
 
                 <TableCell align="center">

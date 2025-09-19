@@ -209,18 +209,13 @@ export default function AircraftTable() {
       const toNum = (v) => (v === undefined || v === null || v === '' ? null : Number(v));
       return {
         id: d._id || d.id,
+        image: d.featuredImage || '',
         title: d.title ?? '',
         year: toNum(d.year),
-        price: toNum(d.price),
-        video: d.videoUrl ?? '',
+        price: d.price ? toNum(d.price) : 'Call',
         status: d.status ?? '',
         category: d.category?.name,
-        airframe: toNum(d.airframe),
-        engine: toNum(d.engine),
-        propeller: toNum(d.propeller),
-        desc: short,
-        descFull: full,
-        location: d.location ?? '',
+        location: d.location ? d.location : 'Not Define',
         agent: d.contactAgent?.name || d.contactAgent?.email || '',
         _agent: {
           name: d.contactAgent?.name || '',
@@ -261,10 +256,10 @@ export default function AircraftTable() {
 
   const columns = React.useMemo(
     () => [
+      { field: 'image', headerName: 'Image', width: 120, renderCell: (params) => <img src={params?.value} alt="" /> },
       { field: 'title', headerName: 'Title', flex: 1, minWidth: 220 },
       { field: 'year', headerName: 'Year', width: 90, type: 'number' },
       { field: 'price', headerName: 'Price', width: 120, type: 'number' },
-      { field: 'video', headerName: 'Video', width: 120 },
       {
         field: 'status',
         headerName: 'Status',
@@ -272,22 +267,6 @@ export default function AircraftTable() {
         renderCell: (params) => <StatusPill value={params?.value} />
       },
       { field: 'category', headerName: 'Category', width: 150 },
-      { field: 'airframe', headerName: 'Airframe', width: 150, type: 'number' },
-      { field: 'engine', headerName: 'Engine', width: 150, type: 'number' },
-      {
-        field: 'desc',
-        headerName: 'Description',
-        flex: 1.2,
-        minWidth: 240,
-        renderCell: (params) => (
-          <span
-            title={params?.row?.descFull}
-            style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-          >
-            {params?.value}
-          </span>
-        )
-      },
       { field: 'location', headerName: 'Location', flex: 0.8, minWidth: 150 },
       {
         field: 'agent',
