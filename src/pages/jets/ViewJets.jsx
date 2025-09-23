@@ -302,7 +302,7 @@ export default function AircraftTable() {
         renderCell: (params) => (
           <Stack direction="row" spacing={0.5}>
             <Tooltip title="View">
-              <a className='flex items-start h-full' href={`http://localhost:5000/showroom/${params.row.id}`} target="_blank" rel="noopener noreferrer">
+              <a className='flex items-start h-full' href={`https://skynet.skynetsilicon.com/showroom/${params.row.id}`} target="_blank" rel="noopener noreferrer">
                 <IconButton size="small">
                   <RemoveRedEyeIcon fontSize="small" />
                 </IconButton>
