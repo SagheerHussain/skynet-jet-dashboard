@@ -13,7 +13,7 @@ import videos from './videos';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard, utilities, brands, teams, testimonials, contacts, videos]
+  items: [dashboard, utilities, brands, teams, testimonials, contacts]
 };
 
 export default menuItems;
