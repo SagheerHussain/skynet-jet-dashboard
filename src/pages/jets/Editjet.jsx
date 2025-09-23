@@ -24,7 +24,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getAircraftCategories } from '../../api/aircraftCategory.api';
 
 const API_READ_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts'; // GET detail
-const API_WRITE_BASE = `https://skynet-jet-dashboard-server.onrender.com/api/aircrafts`; // PUT update
+const API_WRITE_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts'; // PUT update
 
 const STATUS = ['for-sale', 'sold', 'wanted', 'coming-soon', 'sale-pending', 'off-market', 'acquired'];
 const SECTION_KEYS = ['airframe', 'engine', 'propeller', 'avionics', 'equipment', 'interior', 'exterior', 'inspection'];
@@ -63,6 +63,7 @@ const docToFormDefaults = (doc = {}) => ({
   agentPhone: doc.contactAgent?.phone ?? '',
   videoUrl: doc.videoUrl ?? '',
   overview: doc.overview ?? '',
+  index: doc.index  ?? '',
   sections: SECTION_KEYS.reduce((m, k) => {
     m[k] = safeSecHtml(doc, k);
     return m;
@@ -209,6 +210,7 @@ export default function EditJet() {
       if (values.propellerTwo) fd.append('propellerTwo', String(values.propellerTwo));
       fd.append('contactAgent', JSON.stringify(contactAgent));
       fd.append('description', JSON.stringify(description));
+      fd.append('index', Number(values.index));
 
       // gallery images
       fd.append('keepImages', JSON.stringify(imagesExisting)); // preserve these on backend
@@ -337,6 +339,9 @@ export default function EditJet() {
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField label="Propeller Two" type="number" fullWidth {...tf} {...register('propellerTwo')} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField label="List Index" type="number" fullWidth {...tf} {...register('index')} />
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1" className="mb-3 font-semibold">

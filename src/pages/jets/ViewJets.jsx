@@ -210,6 +210,7 @@ export default function AircraftTable() {
       const toNum = (v) => (v === undefined || v === null || v === '' ? null : Number(v));
       return {
         id: d._id || d.id,
+        index: d.index,
         image: d.featuredImage || '',
         title: d.title ?? '',
         year: toNum(d.year),
@@ -260,6 +261,7 @@ export default function AircraftTable() {
 
   const columns = React.useMemo(
     () => [
+      { field: 'index', headerName: 'Index', width: 90, type: 'number' },
       { field: 'image', headerName: 'Image', width: 120, renderCell: (params) => <img src={params?.value} alt="" /> },
       { field: 'title', headerName: 'Title', flex: 1, minWidth: 220 },
       { field: 'year', headerName: 'Year', width: 90, type: 'number' },
@@ -300,7 +302,7 @@ export default function AircraftTable() {
         renderCell: (params) => (
           <Stack direction="row" spacing={0.5}>
             <Tooltip title="View">
-              <a className='flex items-start h-full' href={`https://skynet.skynetsilicon.com/showroom/${params.row.id}`} target="_blank" rel="noopener noreferrer">
+              <a className='flex items-start h-full' href={`http://localhost:5000/showroom/${params.row.id}`} target="_blank" rel="noopener noreferrer">
                 <IconButton size="small">
                   <RemoveRedEyeIcon fontSize="small" />
                 </IconButton>

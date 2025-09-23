@@ -101,7 +101,8 @@ export default function AddJet() {
       agentEmail: '',
       agentPhone: '',
       sections: defaultSectionState,
-      overview: ''
+      overview: '',
+      index: ''
     }
   });
 
@@ -155,6 +156,7 @@ export default function AddJet() {
       fd.append('contactAgent', JSON.stringify(contactAgent));
       fd.append('description', JSON.stringify(description));
       fd.append('overview', values.overview);
+      fd.append('index', String(values.index || ''));
 
       // gallery images
       images.forEach((f) => fd.append('images', f));
@@ -162,6 +164,11 @@ export default function AddJet() {
       // NEW: featured image (single)
       if (featuredImage) {
         fd.append('featuredImage', featuredImage);
+      }
+
+      if (values.index == null || values.index < 1) {
+        setSnack({ open: true, severity: 'error', msg: 'List Index must be greater than 0' });
+        return;
       }
 
       const resp = await fetch('https://skynet-jet-dashboard-server.onrender.com/api/aircrafts', {
@@ -257,6 +264,9 @@ export default function AddJet() {
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField label="Propeller Two" type="number" fullWidth {...register('propellerTwo')} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField label="List Index" type="number" fullWidth {...register('index')} />
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1" className="mb-3 font-semibold">
