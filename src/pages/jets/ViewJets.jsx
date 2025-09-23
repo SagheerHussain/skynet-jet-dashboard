@@ -24,6 +24,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import { useNavigate } from 'react-router-dom';
 import { purple } from '@mui/material/colors';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 const API_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts';
 const BULK_DELETE_URL = `${API_BASE}/bulkDelete`;
@@ -215,6 +216,9 @@ export default function AircraftTable() {
         price: d.price ? toNum(d.price) : 'Call',
         status: d.status ?? '',
         category: d.category?.name,
+        airframe: d.airframe,
+        engine: `${d.engineTwo ? `${d.engine} / ${d.engineTwo}` : `${d.engine}`}`,
+        propeller: `${d.propellerTwo ? `${d.propeller} / ${d.propellerTwo}` : `${d.propeller}`}`,
         location: d.location ? d.location : 'Not Define',
         agent: d.contactAgent?.name || d.contactAgent?.email || '',
         _agent: {
@@ -267,6 +271,9 @@ export default function AircraftTable() {
         renderCell: (params) => <StatusPill value={params?.value} />
       },
       { field: 'category', headerName: 'Category', width: 150 },
+      { field: 'airframe', headerName: 'Airframe', width: 150 },
+      { field: 'engine', headerName: 'Engine', width: 150 },
+      { field: 'propeller', headerName: 'Propeller', width: 150 },
       { field: 'location', headerName: 'Location', flex: 0.8, minWidth: 150 },
       {
         field: 'agent',
@@ -292,6 +299,13 @@ export default function AircraftTable() {
         filterable: false,
         renderCell: (params) => (
           <Stack direction="row" spacing={0.5}>
+            <Tooltip title="View">
+              <a className='flex items-start h-full' href={`https://skynet.skynetsilicon.com/showroom/${params.row.id}`} target="_blank" rel="noopener noreferrer">
+                <IconButton size="small">
+                  <RemoveRedEyeIcon fontSize="small" />
+                </IconButton>
+              </a>
+            </Tooltip>
             <Tooltip title="Edit">
               <IconButton size="small" onClick={() => navigate(`/jets/edit/${params.row.id}`)}>
                 <EditIcon fontSize="small" />

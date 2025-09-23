@@ -19,13 +19,16 @@ import { getLatestAircraft } from '../../../api/aircraft.api';
 
 // ---------------- helpers ----------------
 const headCells = [
-  { id: 'id', label: 'ID', align: 'left' },
+  { id: 'no', label: 'S.No', align: 'left' },
   { id: 'image', label: 'Image', align: 'left' },
+  { id: 'title', label: 'Title', align: 'left' },
+  { id: 'year', label: 'Year', align: 'center' },
+  { id: 'price', label: 'Price', align: 'center' },
+  { id: 'category', label: 'Category', align: 'center' },
+  { id: 'status', label: 'Status', align: 'center' },
   { id: 'airframe', label: 'Airframe', align: 'center' },
   { id: 'engine', label: 'Engine', align: 'center' },
   { id: 'propeller', label: 'Propeller', align: 'center' },
-  { id: 'category', label: 'Category', align: 'center' },
-  { id: 'status', label: 'Status', align: 'center' }
 ];
 
 function OrderTableHead() {
@@ -145,7 +148,7 @@ export default function OrderTable() {
         <Table aria-labelledby="tableTitle" size="small" stickyHeader>
           <OrderTableHead />
           <TableBody>
-            {rows?.map((row) => (
+            {rows?.map((row, index) => (
               <TableRow
                 key={row._id}
                 hover
@@ -155,7 +158,7 @@ export default function OrderTable() {
               >
                 <TableCell align="left">
                   <Link color="secondary" underline="hover">
-                    {row._id}
+                    {index + 1}
                   </Link>
                 </TableCell>
 
@@ -164,7 +167,7 @@ export default function OrderTable() {
                     <img
                       src={row.images[0]}
                       loading="lazy"
-                      style={{ width: 56, height: 36, borderRadius: 6, objectFit: 'cover' }}
+                      style={{ width: 100, height: 60, borderRadius: 6, objectFit: 'cover' }}
                       alt=""
                     />
                   ) : (
@@ -172,14 +175,22 @@ export default function OrderTable() {
                   )}
                 </TableCell>
 
-                <TableCell align="center">{row?.airframe ?? '—'}</TableCell>
-                <TableCell align="center">{row?.engineTwo ? row.engine + ' / ' + row.engineTwo : row.engine}</TableCell>
-                <TableCell align="center">{row?.propellerTwo ? row.propeller + ' / ' + row.propellerTwo : row.propeller}</TableCell>
+                <TableCell align="left">
+                  {row?.title ?? '—'}
+                </TableCell>
+
+
+                <TableCell align="center">{row?.year ?? '—'}</TableCell>
+                <TableCell align="center">{row?.price ? row.price : 'Call'}</TableCell>
                 <TableCell align="center">{row?.category?.name ?? '—'}</TableCell>
 
                 <TableCell align="center">
                   <StatusPill value={row?.status} />
                 </TableCell>
+
+                <TableCell align="center">{row?.airframe ?? '—'}</TableCell>
+                <TableCell align="center">{row?.engineTwo ? row.engine + ' / ' + row.engineTwo : row.engine}</TableCell>
+                <TableCell align="center">{row?.propellerTwo ? row.propeller + ' / ' + row.propellerTwo : row.propeller}</TableCell>
               </TableRow>
             ))}
           </TableBody>
