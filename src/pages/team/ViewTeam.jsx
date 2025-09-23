@@ -66,6 +66,7 @@ const ViewTeam = () => {
       (data || []).map((d) => ({
         id: d._id || d.id,
         profile_picture: d.profile_picture,
+        team_member_picture: d.team_member_picture,
         name: d.name,
         email: d.email,
         phone: d.phone,
@@ -119,6 +120,19 @@ const ViewTeam = () => {
       renderCell: (params) => (
         <img
           src={params.row.profile_picture}
+          alt="Profile"
+          style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 6 }}
+        />
+      ),
+    },
+    {
+      field: "team_member_picture",
+      headerName: "Team Member Image",
+      flex: 1,
+      minWidth: 220,
+      renderCell: (params) => (
+        <img
+          src={params.row.team_member_picture}
           alt="Profile"
           style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 6 }}
         />
@@ -204,8 +218,8 @@ const ViewTeam = () => {
         slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
         onRowSelectionModelChange={(m) => setSelection(m)}
         sx={{ minHeight: "75vh", backgroundColor: "#f4f4f4" }}
-        initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
-        pageSizeOptions={[5]}
+        initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+        pageSizeOptions={[10]}
       />
 
       <Dialog open={confirm.open} onClose={deleting ? undefined : closeConfirm}>

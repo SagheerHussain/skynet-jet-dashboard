@@ -41,8 +41,13 @@ const quillFormats = [
 export default function EditTeam() {
   const [uploading, setUploading] = useState(false);
   const [snack, setSnack] = useState({ open: false, msg: '', severity: 'success' });
-  const [image, setImage] = useState(null);         // File | null
-  const [previewUrl, setPreviewUrl] = useState(''); // string
+
+  // Separate states for each image
+  const [image, setImage] = useState(null);                  // profile picture file
+  const [previewUrl, setPreviewUrl] = useState('');          // profile picture preview
+  const [detailImage, setDetailImage] = useState(null);      // team member picture file
+  const [detailPreviewUrl, setDetailPreviewUrl] = useState(''); // team member preview
+
   const [team, setTeam] = useState(null);
 
   const navigate = useNavigate();
@@ -77,10 +82,9 @@ export default function EditTeam() {
           const t = res.data;
           setTeam(t);
 
-          // push values into RHF AFTER fetch
           reset({
             name: t.name || '',
-            description: t.description || '', // Quill will take HTML string
+            description: t.description || '',
             designation: t.designation || '',
             phone: t.phone || '',
             email: t.email || '',
@@ -91,8 +95,9 @@ export default function EditTeam() {
             youtube: t.youtube || '',
           });
 
-          // show existing image as preview
+          // Show existing images
           if (t.profile_picture) setPreviewUrl(t.profile_picture);
+          if (t.team_member_picture) setDetailPreviewUrl(t.team_member_picture);
         }
       } catch (e) {
         setSnack({ open: true, severity: 'error', msg: 'Failed to load member' });
@@ -100,26 +105,45 @@ export default function EditTeam() {
     })();
   }, [id, reset]);
 
-  // cleanup blob url on unmount / change
+  // cleanup blob urls
   useEffect(() => {
     return () => {
       if (previewUrl?.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
+      if (detailPreviewUrl?.startsWith('blob:')) URL.revokeObjectURL(detailPreviewUrl);
     };
-  }, [previewUrl]);
+  }, [previewUrl, detailPreviewUrl]);
 
-  const handleImageChange = (e) => {
+  const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+
+  // ❌ Old: one handler setting both images
+  // ✅ New: two dedicated handlers
+
+  const handleProfileImageChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const allowed = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
-    if (!allowed.includes(file.type)) {
+    if (!allowedTypes.includes(file.type)) {
       setSnack({ open: true, severity: 'error', msg: 'Please select a PNG/JPEG/WEBP/GIF image.' });
+      e.target.value = '';
       return;
     }
-
     if (previewUrl?.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
     setImage(file);
     setPreviewUrl(URL.createObjectURL(file));
+    e.target.value = ''; // allow re-selecting same file
+  };
+
+  const handleTeamMemberImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!allowedTypes.includes(file.type)) {
+      setSnack({ open: true, severity: 'error', msg: 'Please select a PNG/JPEG/WEBP/GIF image.' });
+      e.target.value = '';
+      return;
+    }
+    if (detailPreviewUrl?.startsWith('blob:')) URL.revokeObjectURL(detailPreviewUrl);
+    setDetailImage(file);
+    setDetailPreviewUrl(URL.createObjectURL(file));
+    e.target.value = ''; // allow re-selecting same file
   };
 
   const onSubmit = async (values) => {
@@ -128,10 +152,10 @@ export default function EditTeam() {
       const formData = new FormData();
       Object.entries(values).forEach(([k, v]) => formData.append(k, v ?? ''));
 
-      // Only append file if user picked a new one
+      // Append only what changed
       if (image) formData.append('profile_picture', image, image.name);
+      if (detailImage) formData.append('team_member_picture', detailImage, detailImage.name);
 
-      // Ensure your API expects id (path or body). Commonly path: PUT /api/team/:id
       const res = await updateTeam(id, formData);
 
       if (res?.success) {
@@ -178,7 +202,7 @@ export default function EditTeam() {
               />
             </Grid>
 
-            {/* React Quill (HTML) instead of TextField */}
+            {/* React Quill (HTML) */}
             <Grid item xs={12}>
               <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                 Short Bio / Description <span style={{ color: '#d32f2f' }}>*</span>
@@ -265,18 +289,24 @@ export default function EditTeam() {
             <Grid item xs={12} md={6}><TextField label="LinkedIn (URL)" fullWidth {...register('linkedin')} {...tf} /></Grid>
             <Grid item xs={12} md={6}><TextField label="YouTube (URL)" fullWidth {...register('youtube')} {...tf} /></Grid>
 
-            {/* Upload + Preview */}
+            {/* Profile picture upload + preview */}
             <Grid item xs={12}>
               <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />} fullWidth sx={{ mb: 2 }}>
-                <input type="file" accept="image/*" name="profile_picture" hidden onChange={handleImageChange} />
-                {image ? 'Change Image' : 'Upload / Replace Profile Picture'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="profile_picture"
+                  hidden
+                  onChange={handleProfileImageChange}
+                />
+                {image ? 'Change Profile Picture' : 'Upload / Replace Profile Picture'}
               </Button>
 
               {previewUrl && (
                 <Paper variant="outlined" sx={{ p: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
                   <img
                     src={previewUrl}
-                    alt="Preview"
+                    alt="Profile Preview"
                     style={{ width: 96, height: 96, objectFit: 'cover', borderRadius: 12 }}
                   />
                   <div>
@@ -286,6 +316,40 @@ export default function EditTeam() {
                     {image && (
                       <Typography variant="body2" color="text.secondary">
                         {(image.size / 1024).toFixed(1)} KB
+                      </Typography>
+                    )}
+                  </div>
+                </Paper>
+              )}
+            </Grid>
+
+            {/* Team member picture upload + preview */}
+            <Grid item xs={12}>
+              <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />} fullWidth sx={{ mb: 2 }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="team_member_picture"
+                  hidden
+                  onChange={handleTeamMemberImageChange}
+                />
+                {detailImage ? 'Change Team Member Picture' : 'Upload / Replace Team Member Picture'}
+              </Button>
+
+              {detailPreviewUrl && (
+                <Paper variant="outlined" sx={{ p: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
+                  <img
+                    src={detailPreviewUrl}
+                    alt="Team Member Preview"
+                    style={{ width: 96, height: 96, objectFit: 'cover', borderRadius: 12 }}
+                  />
+                  <div>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      {detailImage?.name || 'Current image'}
+                    </Typography>
+                    {detailImage && (
+                      <Typography variant="body2" color="text.secondary">
+                        {(detailImage.size / 1024).toFixed(1)} KB
                       </Typography>
                     )}
                   </div>
@@ -304,8 +368,11 @@ export default function EditTeam() {
               onClick={() => {
                 reset();
                 if (previewUrl?.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
+                if (detailPreviewUrl?.startsWith('blob:')) URL.revokeObjectURL(detailPreviewUrl);
                 setPreviewUrl(team?.profile_picture || '');
+                setDetailPreviewUrl(team?.team_member_picture || '');
                 setImage(null);
+                setDetailImage(null);
               }}
             >
               Reset

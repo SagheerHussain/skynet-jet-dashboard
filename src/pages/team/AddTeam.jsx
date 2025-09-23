@@ -1,17 +1,6 @@
 // src/pages/team/AddTeam.jsx
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Grid,
-  TextField,
-  Button,
-  Typography,
-  LinearProgress,
-  Snackbar,
-  Alert,
-  Paper,
-  FormHelperText,
-} from '@mui/material';
+import { Box, Grid, TextField, Button, Typography, LinearProgress, Snackbar, Alert, Paper, FormHelperText } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useForm, Controller } from 'react-hook-form';
@@ -26,7 +15,9 @@ export default function AddTeam() {
   const [uploading, setUploading] = useState(false);
   const [snack, setSnack] = useState({ open: false, msg: '', severity: 'success' });
   const [image, setImage] = useState(null);
+  const [detailImage, setDetailImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
+  const [detailPreviewUrl, setDetailPreviewUrl] = useState('');
 
   const navigate = useNavigate();
 
@@ -35,7 +26,7 @@ export default function AddTeam() {
     handleSubmit,
     reset,
     control,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
     defaultValues: {
       name: '',
@@ -47,8 +38,8 @@ export default function AddTeam() {
       facebook: '',
       instagram: '',
       linkedin: '',
-      youtube: '',
-    },
+      youtube: ''
+    }
   });
 
   // Quill toolbar/modules
@@ -59,16 +50,10 @@ export default function AddTeam() {
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ align: [] }],
       ['link'],
-      ['clean'],
-    ],
+      ['clean']
+    ]
   };
-  const quillFormats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet',
-    'align',
-    'link',
-  ];
+  const quillFormats = ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'align', 'link'];
 
   useEffect(() => {
     return () => {
@@ -80,15 +65,19 @@ export default function AddTeam() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const allowed = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+    const allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'];
     if (!allowed.includes(file.type)) {
-      setSnack({ open: true, severity: 'error', msg: 'Please select a PNG/JPEG/WEBP/GIF image.' });
+      setSnack({ open: true, severity: 'error', msg: 'Please select a PNG/JPEG/JPG/WEBP/GIF image.' });
       return;
     }
 
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setImage(file);
     setPreviewUrl(URL.createObjectURL(file));
+
+    if (detailPreviewUrl) URL.revokeObjectURL(detailPreviewUrl);
+    setDetailImage(file);
+    setDetailPreviewUrl(URL.createObjectURL(file));
   };
 
   const onSubmit = async (values) => {
@@ -109,6 +98,7 @@ export default function AddTeam() {
       const formData = new FormData();
       Object.entries(values).forEach(([k, v]) => formData.append(k, v));
       formData.append('profile_picture', image, image.name);
+      formData.append('team_member_picture', detailImage, detailImage.name);
 
       const response = await createTeam(formData);
       if (response?.success) {
@@ -122,7 +112,7 @@ export default function AddTeam() {
         setSnack({
           open: true,
           severity: 'error',
-          msg: response?.message || 'Failed to create team member',
+          msg: response?.message || 'Failed to create team member'
         });
       }
     } catch (e) {
@@ -178,7 +168,7 @@ export default function AddTeam() {
                   validate: (val) => {
                     const plain = (val || '').replace(/<[^>]+>/g, '').trim();
                     return plain.length > 0 || 'Description is required';
-                  },
+                  }
                 }}
                 render={({ field }) => (
                   <>
@@ -193,9 +183,7 @@ export default function AddTeam() {
                         style={{ height: 200 }}
                       />
                     </div>
-                    {errors.description && (
-                      <FormHelperText error>{errors.description.message}</FormHelperText>
-                    )}
+                    {errors.description && <FormHelperText error>{errors.description.message}</FormHelperText>}
                   </>
                 )}
               />
@@ -209,7 +197,7 @@ export default function AddTeam() {
                 required
                 {...register('phone', {
                   required: 'Phone is required',
-                  pattern: { value: /^[0-9+()\-\s]{7,20}$/, message: 'Enter a valid phone' },
+                  pattern: { value: /^[0-9+()\-\s]{7,20}$/, message: 'Enter a valid phone' }
                 })}
                 error={!!errors.phone}
                 helperText={errors.phone?.message || ''}
@@ -224,7 +212,7 @@ export default function AddTeam() {
                 required
                 {...register('email', {
                   required: 'Email is required',
-                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email' },
+                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email' }
                 })}
                 error={!!errors.email}
                 helperText={errors.email?.message || ''}
@@ -258,20 +246,8 @@ export default function AddTeam() {
 
             {/* Upload + Preview */}
             <Grid item xs={12}>
-              <Button
-                component="label"
-                variant="outlined"
-                startIcon={<CloudUploadIcon />}
-                fullWidth
-                sx={{ mb: 2 }}
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  name="profile_picture"
-                  hidden
-                  onChange={handleImageChange}
-                />
+              <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />} fullWidth sx={{ mb: 2 }}>
+                <input type="file" accept="image/*" name="profile_picture" hidden onChange={handleImageChange} />
                 {image ? 'Change Image' : 'Upload Profile Picture'}
               </Button>
 
@@ -284,7 +260,7 @@ export default function AddTeam() {
                       width: 96,
                       height: 96,
                       objectFit: 'cover',
-                      borderRadius: 12,
+                      borderRadius: 12
                     }}
                   />
                   <div>
@@ -293,6 +269,36 @@ export default function AddTeam() {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {(image?.size / 1024).toFixed(1)} KB
+                    </Typography>
+                  </div>
+                </Paper>
+              )}
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />} fullWidth sx={{ mb: 2 }}>
+                <input type="file" accept="image/*" name="team_member_picture" hidden onChange={handleImageChange} />
+                {detailImage ? 'Change Image' : 'Upload Team Member Picture'}
+              </Button>
+
+              {detailPreviewUrl && (
+                <Paper variant="outlined" sx={{ p: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
+                  <img
+                    src={detailPreviewUrl}
+                    alt="Preview"
+                    style={{
+                      width: 96,
+                      height: 96,
+                      objectFit: 'cover',
+                      borderRadius: 12
+                    }}
+                  />
+                  <div>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      {detailImage?.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {(detailImage?.size / 1024).toFixed(1)} KB
                     </Typography>
                   </div>
                 </Paper>
@@ -312,7 +318,9 @@ export default function AddTeam() {
                 reset();
                 if (previewUrl) URL.revokeObjectURL(previewUrl);
                 setPreviewUrl('');
+                setDetailPreviewUrl('');
                 setImage(null);
+                setDetailImage(null);
               }}
             >
               Reset
@@ -321,16 +329,8 @@ export default function AddTeam() {
         </form>
       </div>
 
-      <Snackbar
-        open={snack.open}
-        autoHideDuration={4000}
-        onClose={() => setSnack((s) => ({ ...s, open: false }))}
-      >
-        <Alert
-          onClose={() => setSnack((s) => ({ ...s, open: false }))}
-          severity={snack.severity}
-          sx={{ width: '100%' }}
-        >
+      <Snackbar open={snack.open} autoHideDuration={4000} onClose={() => setSnack((s) => ({ ...s, open: false }))}>
+        <Alert onClose={() => setSnack((s) => ({ ...s, open: false }))} severity={snack.severity} sx={{ width: '100%' }}>
           {snack.msg}
         </Alert>
       </Snackbar>
