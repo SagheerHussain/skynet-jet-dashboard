@@ -266,7 +266,7 @@ export default function AddJet() {
               <TextField label="Propeller Two" type="number" fullWidth {...register('propellerTwo')} />
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextField label="List Index" type="number" fullWidth {...register('index')} />
+              <TextField label="List Index" type="number" fullWidth {...register('index', { required: true })} />
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1" className="mb-3 font-semibold">
@@ -289,13 +289,13 @@ export default function AddJet() {
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
-                <TextField label="Name" fullWidth {...register('agentName')} />
+                <TextField label="Name" fullWidth {...register('agentName', { required: true })} />
               </Grid>
               <Grid item xs={12} md={4}>
-                <TextField label="Email" type="email" fullWidth {...register('agentEmail')} />
+                <TextField label="Email" type="email" fullWidth {...register('agentEmail', { required: true })} />
               </Grid>
               <Grid item xs={12} md={4}>
-                <TextField label="Phone" fullWidth {...register('agentPhone')} />
+                <TextField label="Phone" fullWidth {...register('agentPhone', { required: true })} />
               </Grid>
             </Grid>
           </div>
