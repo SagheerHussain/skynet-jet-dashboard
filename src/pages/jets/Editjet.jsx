@@ -23,10 +23,10 @@ import SendIcon from '@mui/icons-material/Send';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAircraftCategories } from '../../api/aircraftCategory.api';
 
-// const API_READ_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts'; // GET detail
-const API_READ_BASE = 'http://localhost:5000/api/aircrafts'; // GET detail
+const API_READ_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts'; // GET detail
+// const API_READ_BASE = 'http://localhost:5000/api/aircrafts'; // GET detail
 // const API_WRITE_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts'; // PUT update
-const API_WRITE_BASE = 'http://localhost:5000/api/aircrafts'; // PUT update
+const API_WRITE_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts'; // PUT update
 
 const STATUS = ['for-sale', 'sold', 'wanted', 'coming-soon', 'sale-pending', 'off-market', 'acquired'];
 const SECTION_KEYS = ['airframe', 'engine', 'propeller', 'avionics', 'equipment', 'interior', 'exterior', 'inspection'];
