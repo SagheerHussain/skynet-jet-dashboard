@@ -26,7 +26,8 @@ import { useNavigate } from 'react-router-dom';
 import { purple } from '@mui/material/colors';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
-const API_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts';
+// const API_BASE = 'https://skynet-jet-dashboard-server.onrender.com/api/aircrafts';
+const API_BASE = 'http://localhost:5000/api/aircrafts';
 const BULK_DELETE_URL = `${API_BASE}/bulkDelete`;
 
 // Status options (slugs)
