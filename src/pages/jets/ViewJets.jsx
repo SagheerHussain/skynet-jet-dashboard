@@ -176,7 +176,7 @@ export default function AircraftTable() {
   const fetchRows = React.useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/lists?page=1&pageSize=100`);
+      const res = await fetch(`${API_BASE}/lists/admin?page=1&pageSize=100`);
       const json = await res.json();
       setAircrafts(json.data || []);
       console.log(json.data);
