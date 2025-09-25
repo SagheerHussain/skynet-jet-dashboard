@@ -1,10 +1,22 @@
 .MuiDataGrid-cell {
   color: #000 !important;
 }
+
 .MuiDataGrid-columnHeaderTitleContainer {
   color: #000 !important;
   font-weight: 600 !important;
 }
+
 /* body ::-webkit-scrollbar {
   width: 3px !important;
 } */
+.MuiDataGrid-cell {
+  text-align: center !important;
+}
+
+.MuiDataGrid-columnHeader--alignRight {
+  justify-content: center !important;
+}
+.MuiDataGrid-columnHeaderTitleContainer {
+  justify-content: center !important;
+}

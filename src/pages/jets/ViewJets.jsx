@@ -206,12 +206,12 @@ export default function AircraftTable() {
   }, []);
 
   const rows = React.useMemo(() => {
-    return (aircrafts || []).map((d) => {
+    return (aircrafts || []).map((d, ind) => {
       const { full, short } = pickDescriptionText(d);
       const toNum = (v) => (v === undefined || v === null || v === '' ? null : Number(v));
       return {
         id: d._id || d.id,
-        index: d.index,
+        index: ind + 1,
         image: d.featuredImage || '',
         title: d.title ?? '',
         year: toNum(d.year),
